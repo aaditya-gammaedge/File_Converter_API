@@ -7,6 +7,43 @@ from app.db.db import Base
 from app.db.models.enums import JobStatusEnum
 
 
+# class Job(Base):
+#     __tablename__ = "jobs"
+
+#     id: Mapped[uuid.UUID] = mapped_column(
+#         UUID(as_uuid=True),
+#         primary_key=True,
+#         default=uuid.uuid4
+#     )
+
+
+#     file_id: Mapped[uuid.UUID] = mapped_column(
+#         UUID(as_uuid=True),
+#         ForeignKey("files.id", ondelete="CASCADE"),
+#         nullable=False
+#     )
+
+#     status: Mapped[str] = mapped_column(
+#         JobStatusEnum,
+#         nullable=False,
+#         default="pending"
+#     )
+
+#     output_file_path: Mapped[str | None] = mapped_column(Text)
+#     error_message: Mapped[str | None] = mapped_column(Text)
+
+#     created_at: Mapped[DateTime] = mapped_column(
+#         DateTime(timezone=True),
+#         server_default=func.now()
+#     )
+
+#     completed_at: Mapped[DateTime | None] = mapped_column(
+#         DateTime(timezone=True)
+#     )
+
+
+
+
 class Job(Base):
     __tablename__ = "jobs"
 
@@ -16,6 +53,11 @@ class Job(Base):
         default=uuid.uuid4
     )
 
+    user_id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True),
+        ForeignKey("users.id", ondelete="CASCADE"),
+        nullable=False
+    )
 
     file_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
@@ -23,13 +65,12 @@ class Job(Base):
         nullable=False
     )
 
-    status: Mapped[str] = mapped_column(
-        JobStatusEnum,
+    status: Mapped[JobStatusEnum] = mapped_column(
         nullable=False,
-        default="pending"
+        default=JobStatusEnum.PENDING
     )
 
-    output_file_path: Mapped[str | None] = mapped_column(Text)
+    output_storage_path: Mapped[str | None] = mapped_column(Text)
     error_message: Mapped[str | None] = mapped_column(Text)
 
     created_at: Mapped[DateTime] = mapped_column(
@@ -40,5 +81,3 @@ class Job(Base):
     completed_at: Mapped[DateTime | None] = mapped_column(
         DateTime(timezone=True)
     )
-
-

@@ -5,6 +5,12 @@ import uuid
 from datetime import datetime
 
 
+from sqlalchemy.orm import relationship
+
+files = relationship("File", backref="user")
+jobs = relationship("Job", backref="user")
+
+
 class User(Base):
     __tablename__ = "users"
 
