@@ -49,7 +49,7 @@ class File(Base):
         default=uuid.uuid4
     )
 
-    # 🔐 ownership (REQUIRED)
+    #  ownership (REQUIRED)
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),
