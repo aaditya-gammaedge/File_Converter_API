@@ -5,6 +5,7 @@ from uuid import UUID
 from app.config import JWT_SECRET_KEY, JWT_ALGORITHM, JWT_EXPIRE_MINUTES
 from passlib.context import CryptContext
 
+
 def create_access_token(user_id: UUID) -> str:
 
 
