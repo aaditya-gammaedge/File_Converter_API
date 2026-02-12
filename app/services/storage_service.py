@@ -74,6 +74,7 @@ class StorageService:
         s3.download_file(SUPABASE_BUCKET, key, local_path)
 
 
+
     @staticmethod
     def upload_file(local_path: str, storage_key: str):
         s3 = StorageService.get_client()
@@ -93,3 +94,5 @@ class StorageService:
             "ContentType": content_type
         }
     )
+
+
