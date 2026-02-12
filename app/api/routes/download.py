@@ -12,7 +12,12 @@ from app.services.job_service import JobService
 
 from app.db.models.enums import JobStatusEnum
 
+
+from datetime import datetime
+
 router = APIRouter(prefix="/download", tags=["Download"])
+
+
 
 
 @router.get("/{job_id}")
@@ -30,8 +35,13 @@ async def download_file(
     if not job or job.status != JobStatusEnum.COMPLETED:
         raise HTTPException(400, "File not ready")
 
-    signed = StorageService.create_download_url(
-        job.output_storage_path
-    )
+    signed_url = StorageService.create_download_url(
+    job.output_storage_path
+)
 
-    return {"download_url": signed["signedUrl"]}
+    return {"download_url": signed_url}
+
+    file.is_downloaded = True
+    file.downloaded_at = datetime.utcnow()
+
+    await session.commit()
