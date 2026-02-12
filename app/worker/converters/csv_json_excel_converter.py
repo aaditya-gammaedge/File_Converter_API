@@ -3,7 +3,6 @@ import pandas as pd
 from .base import BaseConverter
 
 
-
 class CSVtoJSONConverter(BaseConverter):
 
     def convert(self, input_path: str, output_path: str):
