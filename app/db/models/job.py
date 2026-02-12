@@ -1,5 +1,5 @@
 import uuid
-
+from sqlalchemy import Enum
 from sqlalchemy import Text, DateTime, func, ForeignKey
 
 from sqlalchemy.dialects.postgresql import UUID
@@ -19,7 +19,7 @@ class Job(Base):
         primary_key=True,
         default=uuid.uuid4
     )
-
+    
     user_id: Mapped[uuid.UUID] = mapped_column(
         UUID(as_uuid=True),
         ForeignKey("users.id", ondelete="CASCADE"),

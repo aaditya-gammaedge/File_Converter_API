@@ -7,8 +7,6 @@ from datetime import datetime
 
 from sqlalchemy.orm import relationship
 
-files = relationship("File", backref="user")
-jobs = relationship("Job", backref="user")
 
 
 class User(Base):
@@ -20,3 +18,7 @@ class User(Base):
 
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     hashed_password = Column(String, nullable = False)
+
+
+files = relationship("File", backref="user")
+jobs = relationship("Job", backref="user")

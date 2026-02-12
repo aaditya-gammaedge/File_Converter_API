@@ -1,35 +1,3 @@
-# import uuid
-# from sqlalchemy import Text, DateTime, func
-# from sqlalchemy.dialects.postgresql import UUID
-# from sqlalchemy.orm import Mapped, mapped_column
-# from app.db.db import Base
-# from app.db.models.enums import FileTypeEnum
-
-
-# class File(Base):
-#     __tablename__ = "files"
-
-#     id: Mapped[uuid.UUID] = mapped_column(
-#         UUID(as_uuid=True),
-#         primary_key=True,
-#         default=uuid.uuid4
-#     )
-
-#     original_filename: Mapped[str] = mapped_column(Text, nullable=False)
-#     stored_filename: Mapped[str] = mapped_column(Text, nullable=False)
-
-#     file_type: Mapped[str] = mapped_column(
-#         FileTypeEnum,
-#         nullable=False
-#     )
-
-#     r2_path: Mapped[str] = mapped_column(Text, nullable=False)
-
-#     created_at: Mapped[DateTime] = mapped_column(
-#         DateTime(timezone=True),
-#         server_default=func.now()
-#     )
-
 
 import uuid
 from sqlalchemy import Text, DateTime, func, ForeignKey, BigInteger
@@ -40,6 +8,10 @@ from app.db.db import Base
 from app.db.models.enums import FileTypeEnum, FileStatusEnum
 
 
+from datetime import datetime
+from sqlalchemy import Boolean, DateTime
+from sqlalchemy.orm import Mapped, mapped_column
+
 class File(Base):
     __tablename__ = "files"
 
@@ -49,27 +21,23 @@ class File(Base):
         default=uuid.uuid4
     )
 
-    #  ownership (REQUIRED)
-    user_id: Mapped[uuid.UUID] = mapped_column(
-        UUID(as_uuid=True),
-        ForeignKey("users.id", ondelete="CASCADE"),
-        nullable=False
-    )
+    
+    user_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True),ForeignKey("users.id", ondelete="CASCADE"),nullable=False)
 
-    # original name from client
+
     original_filename: Mapped[str] = mapped_column(Text, nullable=False)
 
-    #  Supabase object path
+    
     storage_path: Mapped[str] = mapped_column(Text, nullable=False, unique=True)
 
-    # input type
+    
     file_type: Mapped[FileTypeEnum] = mapped_column(nullable=False)
 
-    # metadata
+    
     mime_type: Mapped[str] = mapped_column(Text, nullable=False)
     size_bytes: Mapped[int] = mapped_column(BigInteger, nullable=False)
 
-    # lifecycle
+    
     status: Mapped[FileStatusEnum] = mapped_column(nullable=False)
 
     created_at: Mapped[DateTime] = mapped_column(
@@ -77,3 +45,14 @@ class File(Base):
         server_default=func.now()
     )   
 
+    
+
+    is_downloaded: Mapped[bool] = mapped_column(
+    Boolean,
+    default=False
+)
+
+    downloaded_at: Mapped[datetime | None] = mapped_column(
+    DateTime(timezone=True),
+    nullable=True
+)
