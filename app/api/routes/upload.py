@@ -12,7 +12,10 @@ from app.db.models.enums import FileTypeEnum
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
 
+from app.utils.rate_limiter import rate_limit
+
 @router.post("/presign")
+@rate_limit(limit=10, window=60) 
 async def presign_upload(
 
     original_filename: str,
@@ -37,6 +40,8 @@ async def presign_upload(
     }
 
 
+
+
 @router.post("/confirm/{file_id}")
 async def confirm_upload(
     file_id: str,
@@ -52,6 +57,8 @@ async def confirm_upload(
         return {"status": "uploaded"}
     except ValueError as e:
         raise HTTPException(400, str(e))
+
+
 
 
 
