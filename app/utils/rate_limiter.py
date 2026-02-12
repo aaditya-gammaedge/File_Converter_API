@@ -7,15 +7,12 @@ RATE_LIMIT = 10
 WINDOW = 60
 
 
-
 def rate_limit(limit: int = RATE_LIMIT, window: int = WINDOW):
 
     def decorator(func):
 
         @functools.wraps(func)
-        async def wrapper(*args, **kwargs):
-
-            
+        async def wrapper(*args, **kwargs):            
             current_user = kwargs.get("current_user")
 
             if not current_user:
@@ -23,13 +20,12 @@ def rate_limit(limit: int = RATE_LIMIT, window: int = WINDOW):
                     status_code=401,
                     detail="Authentication required"
                 )
-            
-
-
             user_id = str(current_user.id)
             redis_key = f"rate_limit:{user_id}"
 
             current = redis_client.get(redis_key)
+
+
 
             if current and int(current) >= limit:
                 raise HTTPException(
