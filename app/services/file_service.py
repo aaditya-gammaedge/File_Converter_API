@@ -6,6 +6,7 @@ from app.db.models.file import File
 from app.db.models.enums import FileStatusEnum, FileTypeEnum
 from app.services.storage_service import StorageService
 
+from datetime import datetime, timedelta, timezone
 
 
 
@@ -32,7 +33,8 @@ class FileService:
             file_type=file_type,
             mime_type=mime_type,
             size_bytes=size_bytes,
-            status=FileStatusEnum.UPLOADING
+            status=FileStatusEnum.UPLOADING,
+            expires_at=datetime.now(timezone.utc) + timedelta(hours=24)
         )
 
         db.add(file)
