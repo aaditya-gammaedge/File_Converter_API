@@ -7,6 +7,7 @@ load_dotenv(".env")
 
 ##Database
 DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL_SYNC = os.getenv("DATABASE_URL_SYNC")
 
 #jwt
 
