@@ -22,7 +22,7 @@ async def lifespan(app: FastAPI):
     await engine.dispose()
     print("Database connection closed from supabase")
 
-app = FastAPI(lifespan=lifespan)
+app = FastAPI(lifespan=lifespan, title="File_ConverterAPI")
 
 
 app.include_router(auth.router)
@@ -33,3 +33,7 @@ app.include_router(download.router)
 @app.get("/health")
 async def health():
     return {"hello": "hi"}
+
+
+
+
