@@ -10,14 +10,12 @@ from app.db.db import AsyncSessionLocal
 from app.db.models import User
 
 
-
-
 bearer_scheme = HTTPBearer(auto_error=True)
-
 
 async def get_db() -> AsyncSession:
     async with AsyncSessionLocal() as session:
         yield session
+
 
 
 async def get_current_user(
@@ -34,6 +32,7 @@ async def get_current_user(
             detail="Invalid or expired token"
         )
 
+
     user = await db.get(User, user_id)
 
     if not user:
@@ -41,5 +40,7 @@ async def get_current_user(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="User not found"
         )
+
+
 
     return user
