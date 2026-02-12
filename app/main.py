@@ -4,6 +4,12 @@ from app.db.db import engine, create_tables
 from app.db.models import File, Job, User
 from app.api.routes import auth
 from dotenv import load_dotenv
+
+
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from app.utils.cleanup import cleanup_expired_files
+
+
 load_dotenv()
 
 from app.api.routes import upload, download, convert
@@ -34,6 +40,12 @@ app.include_router(download.router)
 async def health():
     return {"hello": "hi"}
 
+scheduler = AsyncIOScheduler()
+    
+@scheduler.scheduled_job("interval", hours=1)
+async def scheduled_cleanup():
+    await cleanup_expired_files()
 
+scheduler.start()
 
 
