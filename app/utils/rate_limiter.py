@@ -3,6 +3,8 @@ from fastapi import HTTPException
 from app.utils.redis import redis_client
 
 
+
+
 RATE_LIMIT = 10
 WINDOW = 60
 
@@ -12,7 +14,9 @@ def rate_limit(limit: int = RATE_LIMIT, window: int = WINDOW):
     def decorator(func):
 
         @functools.wraps(func)
-        async def wrapper(*args, **kwargs):            
+        async def wrapper(*args, **kwargs):     
+            if redis_client is None:
+                return await func(*args, **kwargs)       
             current_user = kwargs.get("current_user")
 
             if not current_user:
@@ -38,7 +42,11 @@ def rate_limit(limit: int = RATE_LIMIT, window: int = WINDOW):
             if not current:
                 redis_client.expire(redis_key, window)
 
+
+
             return await func(*args, **kwargs)
+        
+
 
         return wrapper
 
