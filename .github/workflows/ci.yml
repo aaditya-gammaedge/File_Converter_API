@@ -40,12 +40,11 @@ jobs:
           python -m pip install -r requirements.txt
           
       - name: Build and Start Services
-        run: docker build -t file converter api .
+        run: docker build -t file-converter-api:latest .
 
-      - name: Wait for services
-        run: sleep 10
 
+    
       - name: Run Tests
-        run: docker run --rm file converter api pytest -v
+        run: docker run --rm file-converter-api:latest pytest -v
 
 
