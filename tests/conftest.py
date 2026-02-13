@@ -18,11 +18,11 @@ from app.api.routes.auth import get_db
 
 
 
-DATABASE_URL = "sqlite+aiosqlite:///./test.db"
+DATABASE_URL1 = "sqlite+aiosqlite:///./test.db"
 
 
 engine = create_async_engine(
-    DATABASE_URL,
+    DATABASE_URL1,
     future=True,
     echo=False,
 )
