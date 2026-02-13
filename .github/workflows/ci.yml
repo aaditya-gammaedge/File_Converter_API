@@ -1,41 +1,37 @@
-name: File Converter CI
+name: CI/CD - Test, Build & Push Docker
 
 on:
-  push:
-    branches: [ "main", "develop" ]
-  pull_request:
-    branches: [ "main" ]
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  test-and-build:
+    runs-on: ubuntu-latest
 
-    services:
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
+    env:
+      DOCKER_IMAGE: rohitankolnerkargamma/email-newsletter-manager
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-          
-      - name: Build and Start Services
-        run: docker build -t file-converter-api:latest .
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
 
-    
-      - name: Run Tests
-        run: docker run --rm file-converter-api:latest pytest -v
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.14
+
+      - name: Build Docker image for testing
+        run: |
+          docker build --target test -t newsletter-manager-test .
 
 
+
+      - name: Run tests
+        run: |
+          docker run --rm newsletter-manager-test pytest -v
