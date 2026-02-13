@@ -16,6 +16,19 @@ jobs:
         ports:
           - 6379:6379
 
+    env:
+      ENV: test
+      UPSTASH_REDIS_HOST: localhost
+      UPSTASH_REDIS_PORT: "6379"
+      REDIS_URL: redis://localhost:6379
+      DATABASE_URL: "sqlite+aiosqlite:///:memory:"
+      DATABASE_URL_SYNC: "sqlite:///:memory:"
+      JWT_SECRET_KEY: "super-secret-key"
+      JWT_ALGORITHM : "HS256"
+      JWT_EXPIRE_MINUTES : 60
+      DATABASE_URL: sqlite+aiosqlite:///./test.db
+
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
