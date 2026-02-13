@@ -12,7 +12,11 @@ from app.db.models import User
 
 bearer_scheme = HTTPBearer(auto_error=True)
 
-async def get_db() -> AsyncSession:
+
+async def get_db():
+    if AsyncSessionLocal is None:
+        raise RuntimeError("Database session not initialized")
+
     async with AsyncSessionLocal() as session:
         yield session
 
