@@ -47,9 +47,6 @@ dist/
 # Cache
 .cache/
 
-# Node (if frontend exists)
-node_modules/
-
 # Secrets / keys
 *.pem
 *.key
