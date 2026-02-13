@@ -46,7 +46,7 @@ async def setup_database():
 
 
 
-@pytest_asyncio.fixturex    
+@pytest_asyncio.fixture   
 async def db_session(setup_database):
     async with TestingSessionLocal() as session:
         yield session
