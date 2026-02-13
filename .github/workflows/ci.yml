@@ -21,7 +21,8 @@ jobs:
     REDIS_HOST: localhost
     REDIS_PORT: 6379
     REDIS_URL: redis://localhost:6379
-
+    DATABASE_URL: sqlite+aiosqlite:///:memory:
+    DATABASE_URL_SYNC: sqlite:///:memory:
 
     steps:
       - name: Checkout Code
