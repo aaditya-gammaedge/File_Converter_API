@@ -22,6 +22,7 @@ async def get_db():
 
 
 
+
 async def get_current_user(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     db: AsyncSession = Depends(get_db)
@@ -48,3 +49,5 @@ async def get_current_user(
 
 
     return user
+
+
