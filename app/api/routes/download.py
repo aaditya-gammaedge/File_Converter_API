@@ -19,7 +19,6 @@ router = APIRouter(prefix="/download", tags=["Download"])
 
 
 
-
 @router.get("/{job_id}")
 async def download_file(
     job_id: str,
@@ -45,3 +44,5 @@ async def download_file(
     file.downloaded_at = datetime.utcnow()
 
     await session.commit()
+
+
