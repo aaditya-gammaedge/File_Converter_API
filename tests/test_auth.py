@@ -35,14 +35,14 @@ async def test_register_duplicate(client):
 @pytest.mark.asyncio
 async def test_login_success(client):
     await client.post("/auth/register",json={
-            "email": "aadi@2003",
-            "password": "pass123"
+            "email": "aaditya.jaiswal@gamil.com",
+            "password": "aadi2003"
         }
     )
 
     response = await client.post("/auth/login",json={
-            "email": "aadi@2003",
-            "password": "pass123"
+            "email": "aaditya.jaiswal@gamil.com",
+            "password": "aadi2003"
         }
     )
 
