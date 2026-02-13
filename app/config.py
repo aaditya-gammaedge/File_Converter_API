@@ -36,6 +36,7 @@ UPSTASH_REDIS_PASSWORD = os.getenv("UPSTASH_REDIS_PASSWORD")
 REDIS_URL=os.getenv("REDIS_URL")
 
 
-if not UPSTASH_REDIS_PORT:
-    raise RuntimeError("REDIS_PORT not found in environment variables")
+ENV = os.getenv("ENV", "dev")
 
+if ENV not in ["test"] and not (REDIS_URL or UPSTASH_REDIS_HOST):
+    raise RuntimeError("Redis configuration not found")
