@@ -17,8 +17,11 @@ jobs:
           - 6379:6379
 
     env:
-      REDIS_URL: redis://localhost:6379
-      ENV: test
+    ENV: test
+    REDIS_HOST: localhost
+    REDIS_PORT: 6379
+    REDIS_URL: redis://localhost:6379
+
 
     steps:
       - name: Checkout Code
