@@ -40,12 +40,12 @@ jobs:
           python -m pip install -r requirements.txt
           
       - name: Build and Start Services
-        run: docker compose up --build -d
+        run: docker build -t file converter api .
 
       - name: Wait for services
         run: sleep 10
 
       - name: Run Tests
-        run: docker compose exec app pytest
+        run: docker run --rm file converter api pytest -v
 
 
