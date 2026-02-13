@@ -36,7 +36,3 @@ UPSTASH_REDIS_PASSWORD = os.getenv("UPSTASH_REDIS_PASSWORD")
 REDIS_URL=os.getenv("REDIS_URL")
 
 
-ENV = os.getenv("ENV", "dev")
-
-if ENV not in ["test"] and not (REDIS_URL or UPSTASH_REDIS_HOST):
-    raise RuntimeError("Redis configuration not found")
