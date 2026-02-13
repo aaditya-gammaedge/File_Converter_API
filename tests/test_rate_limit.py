@@ -6,17 +6,9 @@ from fastapi import HTTPException
 from app.utils.rate_limiter import rate_limit
 
 
-# -----------------------------------
-# Helper Dummy Endpoint
-# -----------------------------------
-
 async def dummy_endpoint(*args, **kwargs):
     return {"success": True}
 
-
-# -----------------------------------
-# SUCCESS UNDER LIMIT
-# -----------------------------------
 
 @pytest.mark.asyncio
 async def test_rate_limit_allows_under_limit(monkeypatch):
@@ -41,9 +33,6 @@ async def test_rate_limit_allows_under_limit(monkeypatch):
     fake_redis.incr.assert_called_once()
 
 
-# -----------------------------------
-# BLOCK WHEN LIMIT EXCEEDED
-# -----------------------------------
 
 @pytest.mark.asyncio
 async def test_rate_limit_blocks_when_exceeded(monkeypatch):
