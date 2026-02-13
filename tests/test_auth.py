@@ -24,7 +24,7 @@ async def test_register_duplicate(client):
 
     response = await client.post(
         "/auth/register", json={
-            "email": "daayush.patidar@gmail.com",
+            "email": "aayush.patidar@gmail.com",
             "password": "123456"
         }
     )
@@ -34,18 +34,14 @@ async def test_register_duplicate(client):
 
 @pytest.mark.asyncio
 async def test_login_success(client):
-    await client.post(
-        "/auth/register",
-        json={
-            "email": "login@test.com",
+    await client.post("/auth/register",json={
+            "email": "aadi@2003",
             "password": "pass123"
         }
     )
 
-    response = await client.post(
-        "/auth/login",
-        json={
-            "email": "login@test.com",
+    response = await client.post("/auth/login",json={
+            "email": "aadi@2003",
             "password": "pass123"
         }
     )
@@ -57,8 +53,7 @@ async def test_login_success(client):
 @pytest.mark.asyncio
 async def test_login_invalid(client):
     response = await client.post(
-        "/auth/login",
-        json={
+        "/auth/login", json={
             "email": "wrong@test.com",
             "password": "wrong"
         }
