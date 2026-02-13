@@ -17,12 +17,12 @@ jobs:
           - 6379:6379
 
     env:
-    ENV: test
-    REDIS_HOST: localhost
-    REDIS_PORT: 6379
-    REDIS_URL: redis://localhost:6379
-    DATABASE_URL: sqlite+aiosqlite:///:memory:
-    DATABASE_URL_SYNC: sqlite:///:memory:
+      ENV: test
+      REDIS_HOST: localhost
+      REDIS_PORT: "6379"
+      REDIS_URL: redis://localhost:6379
+      DATABASE_URL: sqlite+aiosqlite:///:memory:
+      DATABASE_URL_SYNC: sqlite:///:memory:
 
     steps:
       - name: Checkout Code
@@ -39,5 +39,4 @@ jobs:
           pip install -r requirements.txt
 
       - name: Run Tests
-        run: |
-          pytest --cov=app --cov-report=term-missing
+        run: pytest --cov=app --cov-report=term-missing
