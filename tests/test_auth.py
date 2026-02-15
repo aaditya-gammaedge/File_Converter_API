@@ -1,16 +1,23 @@
 import pytest
+import uuid
 
 
 @pytest.mark.asyncio
 async def test_register_success(client):
+    email = f"{uuid.uuid4()}@test.com"
+
     response = await client.post(
-        "/auth/register",json={
-            "email": "aaditya.jaiswal@gamil.com",
+        "/auth/register",
+        json={
+            "email": email,
             "password": "aadi2003"
         }
     )
+
+    print(response.json())
+
     assert response.status_code == 200
-    assert response.json()["email"] == "aaditya.jaiswal@gamil.com"
+    assert response.json()["email"] == email
 
 
 @pytest.mark.asyncio
@@ -35,13 +42,13 @@ async def test_register_duplicate(client):
 @pytest.mark.asyncio
 async def test_login_success(client):
     await client.post("/auth/register",json={
-            "email": "aaditya.jaiswal@gamil.com",
+            "email": "aaditya.jaiswal@gmail.com",
             "password": "aadi2003"
         }
     )
 
     response = await client.post("/auth/login",json={
-            "email": "aaditya.jaiswal@gamil.com",
+            "email": "aaditya.jaiswal@gmail.com",
             "password": "aadi2003"
         }
     )
@@ -60,3 +67,4 @@ async def test_login_invalid(client):
     )
 
     assert response.status_code == 401
+

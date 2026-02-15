@@ -3,8 +3,6 @@ from fastapi import HTTPException
 from app.utils.redis import redis_client
 
 
-
-
 RATE_LIMIT = 10
 WINDOW = 60
 

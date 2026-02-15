@@ -4,6 +4,7 @@ from app.worker.redis_client import get_next_job
 from app.worker.job_processor import process_job
 
 
+
 async def start_worker():
     print("Worker started..............")
 
@@ -17,3 +18,7 @@ async def start_worker():
 
 if __name__ == "__main__":
     asyncio.run(start_worker())
+
+
+
+

@@ -1,4 +1,3 @@
-
 import os
 import uuid
 import tempfile
@@ -8,7 +7,6 @@ from app.db.models.job import Job
 from app.db.models.file import File
 from app.db.models.enums import JobStatusEnum, FileStatusEnum
 from app.services.storage_service import StorageService
-
 from app.worker.converters.pdf_docx_converter import PDFtoDOCXConverter, DOCXtoPDFConverter
 from app.worker.converters.image_converter import JPGtoPNGConverter, PNGtoJPGConverter
 from app.worker.converters.csv_json_excel_converter import CSVtoJSONConverter
@@ -115,3 +113,9 @@ async def process_job(job_id: str):
             await db.commit()
 
             print("Job failed:", str(e))
+
+
+
+
+
+

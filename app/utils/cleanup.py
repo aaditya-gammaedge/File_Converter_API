@@ -9,8 +9,8 @@ async def cleanup_expired_files():
     """
     Deletes files from S3 and DB
     where expires_at < current time
-    """
 
+    """
     async with AsyncSessionLocal() as session:
 
         result = await session.execute(
