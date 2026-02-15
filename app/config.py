@@ -2,8 +2,8 @@
 import os
 from dotenv import load_dotenv
 
-
-load_dotenv(".env")
+if os.getenv("ENV") != "test":
+    load_dotenv()
 
 ##Database
 DATABASE_URL = os.getenv("DATABASE_URL")

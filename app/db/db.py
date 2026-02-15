@@ -59,19 +59,44 @@ from sqlalchemy.ext.asyncio import (
     AsyncSession,
 )
 from sqlalchemy.orm import declarative_base
-from app.config import DATABASE_URL, DATABASE_URL_SYNC
+# from app.config import DATABASE_URL, DATABASE_URL_SYNC
+
+import os
+
+DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL_SYNC = os.getenv("DATABASE_URL_SYNC")
+
 
 
 Base = declarative_base()
 
-# Always create engines
-engine = create_async_engine(
-    DATABASE_URL,
-    echo=False,
-    pool_pre_ping=True,
-    connect_args={"statement_cache_size": 0},
-)
+# # Always create engines
+# engine = create_async_engine(
+#     DATABASE_URL,
+#     echo=False,
+#     pool_pre_ping=True,
+#     connect_args={"statement_cache_size": 0},
+# )
 
+
+
+if DATABASE_URL.startswith("sqlite"):
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=False,
+        pool_pre_ping=True,
+    )
+else:
+    engine = create_async_engine(
+        DATABASE_URL,
+        echo=False,
+        pool_pre_ping=True,
+        connect_args={"statement_cache_size": 0},
+    )
+
+
+
+    
 AsyncSessionLocal = async_sessionmaker(
     bind=engine,
     expire_on_commit=False,
