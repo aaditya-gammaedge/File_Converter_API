@@ -1,6 +1,7 @@
+import enum
+
 from sqlalchemy import Enum
 
-import enum
 
 class FileTypeEnum(str, enum.Enum):
     PDF = "pdf"
@@ -8,6 +9,7 @@ class FileTypeEnum(str, enum.Enum):
     PNG = "png"
     JPG = "jpg"
     CSV = "csv"
+
 
 class JobStatusEnum(str, enum.Enum):
     PENDING = "pending"
@@ -22,6 +24,3 @@ class FileStatusEnum(str, enum.Enum):
     PROCESSING = "processing"
     COMPLETED = "completed"
     FAILED = "failed"
-
-
-

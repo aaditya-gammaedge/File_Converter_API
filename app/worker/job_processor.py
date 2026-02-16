@@ -1,25 +1,27 @@
 import os
-import uuid
 import tempfile
+import uuid
+
 from sqlalchemy import select
+
 from app.db.db import AsyncSessionLocal
-from app.db.models.job import Job
+from app.db.models.enums import FileStatusEnum, JobStatusEnum
 from app.db.models.file import File
-from app.db.models.enums import JobStatusEnum, FileStatusEnum
+from app.db.models.job import Job
 from app.services.storage_service import StorageService
-from app.worker.converters.pdf_docx_converter import PDFtoDOCXConverter, DOCXtoPDFConverter
-from app.worker.converters.image_converter import JPGtoPNGConverter, PNGtoJPGConverter
-from app.worker.converters.csv_json_excel_converter import CSVtoJSONConverter
-from app.worker.converters.csv_json_excel_converter import CSVtoExcelConverter
+from app.worker.converters.csv_json_excel_converter import (
+    CSVtoExcelConverter, CSVtoJSONConverter)
+from app.worker.converters.image_converter import (JPGtoPNGConverter,
+                                                   PNGtoJPGConverter)
+from app.worker.converters.pdf_docx_converter import (DOCXtoPDFConverter,
+                                                      PDFtoDOCXConverter)
 
 
 async def process_job(job_id: str):
 
     async with AsyncSessionLocal() as db:
 
-        result = await db.execute(
-            select(Job).where(Job.id == job_id)
-        )
+        result = await db.execute(select(Job).where(Job.id == job_id))
         job = result.scalar_one_or_none()
 
         if not job:
@@ -32,24 +34,18 @@ async def process_job(job_id: str):
 
         try:
 
-
             # ---------- TEMP FILES ----------
-
 
             temp_input = tempfile.NamedTemporaryFile(delete=False)
             temp_output = tempfile.NamedTemporaryFile(delete=False)
 
             # ---------- DOWNLOAD ORIGINAL ----------
-           
-            StorageService.download_file(
-                file.storage_path,
-                temp_input.name
-            )
+
+            StorageService.download_file(file.storage_path, temp_input.name)
 
             ext = file.original_filename.split(".")[-1].lower()
 
             # ---------- CONVERT ----------
-          
 
             if ext == "pdf":
                 output_ext = "docx"
@@ -58,14 +54,12 @@ async def process_job(job_id: str):
                 converter = PDFtoDOCXConverter()
                 converter.convert(temp_input.name, output_path)
 
-
             elif ext == "docx":
                 output_ext = "pdf"
                 output_path = temp_output.name + ".pdf"
 
                 converter = DOCXtoPDFConverter()
                 converter.convert(temp_input.name, output_path)
-
 
             elif ext in ["jpg", "png", "webp"]:
                 output_ext = "png"
@@ -74,7 +68,6 @@ async def process_job(job_id: str):
                 converter = JPGtoPNGConverter()
                 converter.convert(temp_input.name, output_path)
 
-
             elif ext == "csv":
                 output_ext = "json"
                 output_path = temp_output.name + ".json"
@@ -82,26 +75,20 @@ async def process_job(job_id: str):
                 converter = CSVtoJSONConverter()
                 converter.convert(temp_input.name, output_path)
 
-
-            elif ext == "csv_excel":   # optional custom case
+            elif ext == "csv_excel":  # optional custom case
                 output_ext = "xlsx"
                 output_path = temp_output.name + ".xlsx"
 
                 converter = CSVtoExcelConverter()
                 converter.convert(temp_input.name, output_path)
 
-
             else:
                 raise Exception("Unsupported file format")
-
 
             # ---------- UPLOAD RESULT ----------
             output_key = f"converted/{file.user_id}/{job.id}/output.{output_ext}"
 
-            StorageService.upload_file(
-                temp_output.name,
-                output_key
-            )
+            StorageService.upload_file(temp_output.name, output_key)
 
             # ---------- UPDATE DB ----------
             job.status = JobStatusEnum.COMPLETED
@@ -118,9 +105,3 @@ async def process_job(job_id: str):
             await db.commit()
 
             print("Job failed:", str(e))
-
-
-
-
-
-

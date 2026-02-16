@@ -1,5 +1,5 @@
-
 import pandas as pd
+
 from .base import BaseConverter
 
 
@@ -29,5 +29,3 @@ class ExceltoCSVConverter(BaseConverter):
     def convert(self, input_path: str, output_path: str):
         df = pd.read_excel(input_path)
         df.to_csv(output_path, index=False)
-
-

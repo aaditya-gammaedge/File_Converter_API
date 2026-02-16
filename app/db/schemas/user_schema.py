@@ -1,6 +1,8 @@
-from pydantic import BaseModel ,EmailStr
 from datetime import datetime
 from uuid import UUID
+
+from pydantic import BaseModel, EmailStr
+
 
 class UserCreate(BaseModel):
     email: EmailStr
@@ -19,12 +21,3 @@ class UserRead(BaseModel):
 
     class Config:
         from_attributes = True
-
-
-
-
-
-
-
-
-

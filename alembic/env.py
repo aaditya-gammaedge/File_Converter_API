@@ -1,30 +1,25 @@
 import asyncio
+import os
 from logging.config import fileConfig
 
+from dotenv import load_dotenv
 from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
-from app.config import DATABASE_URL
+
 from alembic import context
-
+from app.config import DATABASE_URL
 from app.db.db import Base
-from app.db.models import *  
-
-import os
-from dotenv import load_dotenv
-
+from app.db.models import *
 
 load_dotenv()
 
 from app.config import DATABASE_URL_SYNC
+
 config = context.config
 
 
-config.set_main_option(
-    "sqlalchemy.url",
-    DATABASE_URL_SYNC.replace("%", "%%")
-)
-
+config.set_main_option("sqlalchemy.url", DATABASE_URL_SYNC.replace("%", "%%"))
 
 
 if config.config_file_name is not None:
@@ -74,4 +69,3 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     asyncio.run(run_migrations_online())
-

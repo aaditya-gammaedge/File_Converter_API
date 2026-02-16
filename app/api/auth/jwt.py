@@ -1,20 +1,22 @@
 from datetime import datetime, timedelta, timezone
-from jose import jwt, JWTError
 from typing import Optional
 from uuid import UUID
-from app.config import JWT_SECRET_KEY, JWT_ALGORITHM, JWT_EXPIRE_MINUTES
+
+from jose import JWTError, jwt
 from passlib.context import CryptContext
+
+from app.config import JWT_ALGORITHM, JWT_EXPIRE_MINUTES, JWT_SECRET_KEY
 
 
 def create_access_token(user_id: UUID) -> str:
 
-
     payload = {
-    "sub": str(user_id),
-    "exp": datetime.now(timezone.utc) + timedelta(minutes=JWT_EXPIRE_MINUTES)
-}
+        "sub": str(user_id),
+        "exp": datetime.now(timezone.utc) + timedelta(minutes=JWT_EXPIRE_MINUTES),
+    }
 
     return jwt.encode(payload, JWT_SECRET_KEY, algorithm=JWT_ALGORITHM)
+
 
 def decode_access_token(token: str) -> Optional[UUID]:
     try:
@@ -25,13 +27,7 @@ def decode_access_token(token: str) -> Optional[UUID]:
         return None
 
 
-
-
-
-pwd_context = CryptContext(
-    schemes=["bcrypt"],
-    deprecated="auto"
-)
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
 def hash_password(password: str) -> str:

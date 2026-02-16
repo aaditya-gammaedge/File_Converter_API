@@ -1,5 +1,5 @@
-
 import os
+
 os.environ["ENV"] = "test"
 
 os.environ["DATABASE_URL"] = "sqlite+aiosqlite://"
@@ -7,13 +7,12 @@ os.environ["DATABASE_URL_SYNC"] = "sqlite://"
 
 
 import pytest_asyncio
-from httpx import AsyncClient, ASGITransport
-from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker
+from httpx import ASGITransport, AsyncClient
+from sqlalchemy.ext.asyncio import async_sessionmaker, create_async_engine
 
-from app.main import app
-from app.db.db import Base
 import app.db.db as db_module
-
+from app.db.db import Base
+from app.main import app
 
 DATABASE_URL = "sqlite+aiosqlite://"
 
@@ -31,10 +30,9 @@ TestingSessionLocal = async_sessionmaker(
 
 @pytest_asyncio.fixture(autouse=True)
 async def override_database():
-    
+
     db_module.AsyncSessionLocal = TestingSessionLocal
 
-    
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
 
@@ -44,9 +42,10 @@ async def override_database():
         await conn.run_sync(Base.metadata.drop_all)
 
 
-
 import pytest
+
 from app.db.db import create_tables
+
 
 @pytest.fixture(scope="session", autouse=True)
 async def setup_database():

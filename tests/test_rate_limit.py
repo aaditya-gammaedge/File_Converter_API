@@ -1,6 +1,6 @@
-import pytest
 from unittest.mock import AsyncMock, Mock
 
+import pytest
 from fastapi import HTTPException
 
 from app.utils.rate_limiter import rate_limit
@@ -17,10 +17,7 @@ async def test_rate_limit_allows_under_limit(monkeypatch):
     fake_redis.get.return_value = "5"
     fake_redis.incr.return_value = 6
 
-    monkeypatch.setattr(
-        "app.utils.rate_limiter.redis_client",
-        fake_redis
-    )
+    monkeypatch.setattr("app.utils.rate_limiter.redis_client", fake_redis)
 
     decorator = rate_limit(limit=10, window=60)
     wrapped = decorator(dummy_endpoint)
@@ -33,17 +30,13 @@ async def test_rate_limit_allows_under_limit(monkeypatch):
     fake_redis.incr.assert_called_once()
 
 
-
 @pytest.mark.asyncio
 async def test_rate_limit_blocks_when_exceeded(monkeypatch):
 
     fake_redis = Mock()
     fake_redis.get.return_value = "10"
 
-    monkeypatch.setattr(
-        "app.utils.rate_limiter.redis_client",
-        fake_redis
-    )
+    monkeypatch.setattr("app.utils.rate_limiter.redis_client", fake_redis)
 
     decorator = rate_limit(limit=10, window=60)
     wrapped = decorator(dummy_endpoint)
@@ -61,15 +54,13 @@ async def test_rate_limit_blocks_when_exceeded(monkeypatch):
 # BLOCK WHEN NO USER
 # -----------------------------------
 
+
 @pytest.mark.asyncio
 async def test_rate_limit_requires_auth(monkeypatch):
 
     fake_redis = Mock()
 
-    monkeypatch.setattr(
-        "app.utils.rate_limiter.redis_client",
-        fake_redis
-    )
+    monkeypatch.setattr("app.utils.rate_limiter.redis_client", fake_redis)
 
     decorator = rate_limit()
     wrapped = decorator(dummy_endpoint)
@@ -85,6 +76,7 @@ async def test_rate_limit_requires_auth(monkeypatch):
 # EXPIRE SET ON FIRST REQUEST
 # -----------------------------------
 
+
 @pytest.mark.asyncio
 async def test_rate_limit_sets_expire_on_first_request(monkeypatch):
 
@@ -92,10 +84,7 @@ async def test_rate_limit_sets_expire_on_first_request(monkeypatch):
     fake_redis.get.return_value = None
     fake_redis.incr.return_value = 1
 
-    monkeypatch.setattr(
-        "app.utils.rate_limiter.redis_client",
-        fake_redis
-    )
+    monkeypatch.setattr("app.utils.rate_limiter.redis_client", fake_redis)
 
     decorator = rate_limit(limit=10, window=60)
     wrapped = decorator(dummy_endpoint)

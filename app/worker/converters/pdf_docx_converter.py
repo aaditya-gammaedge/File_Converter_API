@@ -1,6 +1,5 @@
-
-from pdf2docx import Converter as PDFConverter
 from docx2pdf import convert as docx_to_pdf
+from pdf2docx import Converter as PDFConverter
 
 from .base import BaseConverter
 
@@ -13,12 +12,7 @@ class PDFtoDOCXConverter(BaseConverter):
         pdf.close()
 
 
-
 class DOCXtoPDFConverter(BaseConverter):
 
     def convert(self, input_path: str, output_path: str):
         docx_to_pdf(input_path, output_path)
-
-
-
-

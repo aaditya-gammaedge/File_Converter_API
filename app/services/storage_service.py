@@ -1,19 +1,15 @@
-
-import os
-import boto3
 import mimetypes
-from app.config import (
-    SUPABASE_S3_ENDPOINT,
-    SUPABASE_ACCESS_KEY,
-    SUPABASE_SECRET_KEY,
-    SUPABASE_BUCKET,
-)
+import os
 
+import boto3
 
+from app.config import (SUPABASE_ACCESS_KEY, SUPABASE_BUCKET,
+                        SUPABASE_S3_ENDPOINT, SUPABASE_SECRET_KEY)
 
 print("ENDPOINT:", os.getenv("SUPABASE_S3_ENDPOINT"))
 print("ACCESS:", bool(os.getenv("SUPABASE_ACCESS_KEY")))
 print("SECRET:", bool(os.getenv("SUPABASE_SECRET_KEY")))
+
 
 class StorageService:
 
@@ -27,7 +23,6 @@ class StorageService:
             region_name="ap-south-1",
         )
 
-    
     @staticmethod
     def create_upload_url(path: str, mime_type: str):
         s3 = StorageService.get_client()
@@ -42,7 +37,6 @@ class StorageService:
             ExpiresIn=3600,
         )
 
-    
     @staticmethod
     def create_download_url(path: str):
         s3 = StorageService.get_client()
@@ -56,7 +50,6 @@ class StorageService:
             ExpiresIn=3600,
         )
 
-    
     @staticmethod
     def file_exists(path: str):
         s3 = StorageService.get_client()
@@ -67,32 +60,21 @@ class StorageService:
         except s3.exceptions.ClientError:
             return False
 
-    
     @staticmethod
     def download_file(key: str, local_path: str):
         s3 = StorageService.get_client()
         s3.download_file(SUPABASE_BUCKET, key, local_path)
-
-
 
     @staticmethod
     def upload_file(local_path: str, storage_key: str):
         s3 = StorageService.get_client()
         bucket = os.getenv("SUPABASE_BUCKET")
 
-    
         content_type, _ = mimetypes.guess_type(storage_key)
 
         if not content_type:
             content_type = "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
 
         s3.upload_file(
-            local_path,
-            bucket,
-            storage_key,
-            ExtraArgs={
-            "ContentType": content_type
-        }
-    )
-
-
+            local_path, bucket, storage_key, ExtraArgs={"ContentType": content_type}
+        )
