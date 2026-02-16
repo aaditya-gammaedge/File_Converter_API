@@ -23,7 +23,7 @@ jobs:
       # REDIS_URL: redis://localhost:6379
       # DATABASE_URL: "sqlite+aiosqlite:///:memory:"
       # DATABASE_URL_SYNC: "sqlite:///:memory:"
-      JWT_SECRET_KEY: "super-secret-key"
+      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
       # JWT_ALGORITHM : "HS256"
       # JWT_EXPIRE_MINUTES : 60
       # DATABASE_URL1: "sqlite+aiosqlite:///./test.db"
