@@ -31,11 +31,16 @@ async def process_job(job_id: str):
         file = await db.get(File, job.file_id)
 
         try:
+
+
             # ---------- TEMP FILES ----------
+
+
             temp_input = tempfile.NamedTemporaryFile(delete=False)
             temp_output = tempfile.NamedTemporaryFile(delete=False)
 
             # ---------- DOWNLOAD ORIGINAL ----------
+           
             StorageService.download_file(
                 file.storage_path,
                 temp_input.name
