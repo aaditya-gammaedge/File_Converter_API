@@ -23,7 +23,7 @@
 #       # REDIS_URL: redis://localhost:6379
 #       # DATABASE_URL: "sqlite+aiosqlite:///:memory:"
 #       # DATABASE_URL_SYNC: "sqlite:///:memory:"
-#       JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+      # JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
 #       # JWT_ALGORITHM : "HS256"
 #       # JWT_EXPIRE_MINUTES : 60
 #       # DATABASE_URL1: "sqlite+aiosqlite:///./test.db"
@@ -88,12 +88,19 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        
+      - name: Install pre-commit
+        run: pip install pre-commit
 
-      # 1️⃣ Build Docker image with Docker Hub tag
+      - name: Run pre-commit
+        run: pre-commit run --all-files
+
+       
+      
       - name: Build Docker Image
         run: docker build -t ${{ secrets.DOCKER_USERNAME }}/file-converter-api:latest .
 
-      # 2️⃣ Run tests inside container
+      
       - name: Run Tests
         run: |
           docker run --rm \
@@ -103,19 +110,20 @@ jobs:
           -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
           ${{ secrets.DOCKER_USERNAME }}/file-converter-api:latest pytest -v
 
-      # 3️⃣ Login to Docker Hub (only on main branch)
+     
       - name: Login to Docker Hub
         if: github.ref == 'refs/heads/main'
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-      # 4️⃣ Push image (only on main branch)
+      
       - name: Push Image
         if: github.ref == 'refs/heads/main'
         run: docker push ${{ secrets.DOCKER_USERNAME }}/file-converter-api:latest
 
-        # 5️⃣ Trigger Render Deployment (main only)
+       
       - name: Deploy to Render
         if: github.ref == 'refs/heads/main'
         run: curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
 
-        
+
+
