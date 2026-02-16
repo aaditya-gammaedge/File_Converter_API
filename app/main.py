@@ -31,6 +31,10 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan, title="File_ConverterAPI")
 
 
+@app.get("/")
+def root():
+    return {"message": "File Converter API is running!"}
+
 app.include_router(auth.router)
 
 app.include_router(upload.router)
