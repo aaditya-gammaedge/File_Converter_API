@@ -1,4 +1,67 @@
-name: File Converter CI
+# name: File Converter CI
+
+# on:
+#   push:
+#     branches: [ "main", "develop" ]
+#   pull_request:
+#     branches: [ "main" ]
+
+# jobs:
+#   test:
+#     runs-on: ubuntu-latest
+
+#     services:
+#       redis:
+#         image: redis:7
+#         ports:
+#           - 6379:6379
+
+#     env:
+#       ENV: test
+#       # UPSTASH_REDIS_HOST: localhost
+#       # UPSTASH_REDIS_PORT: "6379"
+#       # REDIS_URL: redis://localhost:6379
+#       # DATABASE_URL: "sqlite+aiosqlite:///:memory:"
+#       # DATABASE_URL_SYNC: "sqlite:///:memory:"
+#       JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
+#       # JWT_ALGORITHM : "HS256"
+#       # JWT_EXPIRE_MINUTES : 60
+#       # DATABASE_URL1: "sqlite+aiosqlite:///./test.db"
+#       DATABASE_URL: sqlite+aiosqlite://
+#       DATABASE_URL_SYNC: sqlite://
+#       # JWT_SECRET_KEY: test-secret
+
+
+  
+#     steps:
+#       - name: Checkout Code
+#         uses: actions/checkout@v4
+
+#       - name: Set up Python
+#         uses: actions/setup-python@v5
+#         with:
+#           python-version: "3.12"
+
+#       - name: Install Dependencies
+#         run: |
+#           python -m pip install --upgrade pip
+#           python -m pip install -r requirements.txt
+
+#       - name: Build and Start Services
+#         run: docker build -t file-converter-api:latest .
+
+#       - name: Run Tests
+#         run: docker run --rm file-converter-api:latest pytest -v
+
+          
+  
+
+
+    
+      
+
+
+name: File Converter CI-CD
 
 on:
   push:
@@ -7,7 +70,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  test:
+  build-test-push:
     runs-on: ubuntu-latest
 
     services:
@@ -18,45 +81,35 @@ jobs:
 
     env:
       ENV: test
-      # UPSTASH_REDIS_HOST: localhost
-      # UPSTASH_REDIS_PORT: "6379"
-      # REDIS_URL: redis://localhost:6379
-      # DATABASE_URL: "sqlite+aiosqlite:///:memory:"
-      # DATABASE_URL_SYNC: "sqlite:///:memory:"
-      JWT_SECRET_KEY: ${{secrets.JWT_SECRET_KEY}}
-      # JWT_ALGORITHM : "HS256"
-      # JWT_EXPIRE_MINUTES : 60
-      # DATABASE_URL1: "sqlite+aiosqlite:///./test.db"
       DATABASE_URL: sqlite+aiosqlite://
       DATABASE_URL_SYNC: sqlite://
-      # JWT_SECRET_KEY: test-secret
-
-
+      JWT_SECRET_KEY: ${{ secrets.JWT_SECRET_KEY }}
 
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
+      # 1️⃣ Build Docker image with Docker Hub tag
+      - name: Build Docker Image
+        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/file-converter-api:latest .
 
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          python -m pip install -r requirements.txt
-
-      - name: Build and Start Services
-        run: docker build -t file-converter-api:latest .
-
+      # 2️⃣ Run tests inside container
       - name: Run Tests
-        run: docker run --rm file-converter-api:latest pytest -v
+        run: |
+          docker run --rm \
+          -e ENV=test \
+          -e DATABASE_URL=sqlite+aiosqlite:// \
+          -e DATABASE_URL_SYNC=sqlite:// \
+          -e JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }} \
+          ${{ secrets.DOCKER_USERNAME }}/file-converter-api:latest pytest -v
 
-          
-  
+      # 3️⃣ Login to Docker Hub (only on main branch)
+      - name: Login to Docker Hub
+        if: github.ref == 'refs/heads/main'
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
 
-
-    
-      
+      # 4️⃣ Push image (only on main branch)
+      - name: Push Image
+        if: github.ref == 'refs/heads/main'
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/file-converter-api:latest
 
