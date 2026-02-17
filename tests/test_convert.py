@@ -2,7 +2,7 @@ from unittest.mock import AsyncMock
 
 import pytest
 
-from app.api.auth.dependencies import get_current_user  # adjust path
+from app.api.auth.dependencies import get_current_user 
 from app.main import app
 from app.services.job_service import JobService
 
